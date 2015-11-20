@@ -1693,6 +1693,11 @@ public abstract class Tree {
         }
 
         /*----------------ADDED IN PA1--------------------*/
+
+        public void visitTrinary(Trinary that) {
+            visitTree(that);
+        }
+        
         public void visitNuminstances(Numinstances that) {
             visitTree(that);
         }

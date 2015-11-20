@@ -337,19 +337,19 @@ Expr            :   LValue
 
                 |   Expr PLUS_PLUS
                     {
-                        $$.expr = new Tree.Unary(Tree.POST_INC, $1.expr, $2.loc);
+                        $$.expr = new Tree.Unary(Tree.POSTINC, $1.expr, $2.loc);
                     }
                 |   PLUS_PLUS Expr
                     {
-                        $$.expr = new Tree.Unary(Tree.PRE_INC, $2.expr, $1.loc);
+                        $$.expr = new Tree.Unary(Tree.PREINC, $2.expr, $1.loc);
                     }
                 |   Expr MINUS_MINUS
                     {
-                        $$.expr = new Tree.Unary(Tree.POST_DEC, $1.expr, $2.loc);
+                        $$.expr = new Tree.Unary(Tree.POSTDEC, $1.expr, $2.loc);
                     }
                 |   MINUS_MINUS Expr
                     {
-                        $$.expr = new Tree.Unary(Tree.PRE_DEC, $2.expr, $1.loc);
+                        $$.expr = new Tree.Unary(Tree.PREDEC, $2.expr, $1.loc);
                     }
                 |   NUMINSTANCES '(' IDENTIFIER ')'
                     {
