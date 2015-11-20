@@ -3770,6 +3770,7 @@ state 188
 	'<'  shift 124
 	'.'  shift 125
 	'['  shift 127
+	'?'  reduce 74
 	':'  reduce 74
 	','  reduce 74
 	';'  reduce 74

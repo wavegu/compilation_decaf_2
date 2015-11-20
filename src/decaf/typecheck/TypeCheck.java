@@ -89,13 +89,6 @@ public class TypeCheck extends Tree.Visitor {
 				expr.type = BaseType.INT;
 				return;
 			}
-			switch (expr.tag) {
-				case Tree.PREINC:	expr.type = BaseType.INT; return;
-				case Tree.PREDEC:	expr.type = BaseType.INT; return;
-				case Tree.POSTINC:	expr.type = BaseType.INT; return;
-				case Tree.POSTDEC:	expr.type = BaseType.INT; return;
-				default: break;
-			}
 			if (!(expr.expr.type.equal(BaseType.BOOL) || expr.expr.type
 					.equal(BaseType.ERROR))) {
 				issueError(new IncompatUnOpError(expr.getLocation(), "!",
@@ -103,6 +96,15 @@ public class TypeCheck extends Tree.Visitor {
 			}
 			expr.type = BaseType.BOOL;
 		}
+	}
+
+
+	@Override
+	public void visitTrinary(Tree.Trinary expr) {
+		expr.left.accept(this);
+		expr.middle.accept(this);
+		expr.right.accept(this);
+		expr.type = expr.middle.type;
 	}
 
 	@Override
@@ -134,6 +136,7 @@ public class TypeCheck extends Tree.Visitor {
 	public void visitReadLineExpr(Tree.ReadLineExpr readStringExpr) {
 		readStringExpr.type = BaseType.STRING;
 	}
+
 
 	@Override
 	public void visitIndexed(Tree.Indexed indexed) {

@@ -38,7 +38,7 @@ import java.util.*;
 %token FI DO OD
 
 %left GUARD
-%nonassoc '?' ':'
+%left '?' ':'
 %left OR
 %left AND 
 %nonassoc EQUAL NOT_EQUAL
