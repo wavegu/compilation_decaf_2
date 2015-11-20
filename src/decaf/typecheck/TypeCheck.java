@@ -79,6 +79,16 @@ public class TypeCheck extends Tree.Visitor {
 			}
 		}
 		else{
+			if (expr.tag == Tree.PREINC || expr.tag == Tree.PREDEC || expr.tag == Tree.POSTINC || expr.tag == Tree.POSTDEC) {
+				if (!(expr.expr.type.equal(BaseType.INT) || expr.expr.type.equal(BaseType.ERROR))) {
+					String errorString = "++";
+					if (expr.tag == Tree.POSTDEC || expr.tag == Tree.PREDEC)
+						errorString = "--";
+					issueError(new IncompatUnOpError(expr.expr.getLocation(), errorString, expr.expr.type.toString()));
+				}
+				expr.type = BaseType.INT;
+				return;
+			}
 			switch (expr.tag) {
 				case Tree.PREINC:	expr.type = BaseType.INT; return;
 				case Tree.PREDEC:	expr.type = BaseType.INT; return;
