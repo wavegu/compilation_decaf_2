@@ -600,6 +600,11 @@ public class TypeCheck extends Tree.Visitor {
 
 	@Override
 	public void visitNuminstances(Tree.Numinstances expr) {
+		Class c = table.lookupClass(expr.ident);
+		if (c == null) {
+			issueError(new ClassNotFoundError(expr.getLocation(),
+					expr.ident));
+		}
 		expr.type = BaseType.INT;
 	}
 
