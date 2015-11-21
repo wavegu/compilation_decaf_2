@@ -207,7 +207,7 @@ Stmt            :   VariableDef
 
 GuardedIfStmt   :   IF GuardedStmts FI
                     {
-                        $$.stmt = new Tree.GuardedIfStmt($2.stmt, $1.loc);
+                        $$.gistmt = new Tree.GuardedIfStmt($2.gstmts, $1.loc);
                     }
                 ;
 
@@ -220,11 +220,11 @@ GuardedDoStmt   :   DO GuardedStmts OD
 
 GuardedStmts    :   GuardedStmts GUARD Expr ':' Stmt
                     {
-                        $$.stmt = new Tree.GuardedStmts($1.stmt, $3.expr, $5.stmt, $2.loc);
+                        $$.gstmts = new Tree.GuardedStmts($1.gstmts, $3.expr, $5.stmt, $2.loc);
                     }
                 |   Expr ':' Stmt
                     {
-                        $$.stmt = new Tree.GuardedStmt($1.expr, $3.stmt, $2.loc);
+                        $$.gstmts = new Tree.GuardedStmt($1.expr, $3.stmt, $2.loc);
                     }
                 ;
 

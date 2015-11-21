@@ -1130,7 +1130,7 @@ break;
 case 38:
 //#line 209 "Parser.y"
 {
-                        yyval.stmt = new Tree.GuardedIfStmt(val_peek(1).stmt, val_peek(2).loc);
+                        yyval.gistmt = new Tree.GuardedIfStmt(val_peek(1).gstmts, val_peek(2).loc);
                     }
 break;
 case 39:
@@ -1142,13 +1142,13 @@ break;
 case 40:
 //#line 222 "Parser.y"
 {
-                        yyval.stmt = new Tree.GuardedStmts(val_peek(4).stmt, val_peek(2).expr, val_peek(0).stmt, val_peek(3).loc);
+                        yyval.gstmts = new Tree.GuardedStmts(val_peek(4).gstmts, val_peek(2).expr, val_peek(0).stmt, val_peek(3).loc);
                     }
 break;
 case 41:
 //#line 226 "Parser.y"
 {
-                        yyval.stmt = new Tree.GuardedStmt(val_peek(2).expr, val_peek(0).stmt, val_peek(1).loc);
+                        yyval.gstmts = new Tree.GuardedStmt(val_peek(2).expr, val_peek(0).stmt, val_peek(1).loc);
                     }
 break;
 case 42:

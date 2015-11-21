@@ -608,6 +608,24 @@ public class TypeCheck extends Tree.Visitor {
 		expr.type = BaseType.INT;
 	}
 
+	@Override
+	public void visitGuardedStmt(Tree.GuardedStmt expr) {
+        System.out.println("visiting GuardedStmt");
+		expr.boolExpr.accept(this);
+	}
+
+	@Override
+	public void visitGuardedStmts(Tree.GuardedStmts expr) {
+        System.out.println("visiting GuardedStmts");
+	}
+
+	@Override
+	public void visitGuardedIfStmt(Tree.GuardedIfStmt expr) {
+        System.out.println("visiting GuardedIfStmt");
+        expr.stmt.accept(this);
+	}
+
+
 	private void issueError(DecafError error) {
 		Driver.getDriver().issueError(error);
 	}
@@ -680,6 +698,10 @@ public class TypeCheck extends Tree.Visitor {
 		expr.left.accept(this);
 		expr.middle.accept(this);
 		expr.right.accept(this);
+
+		if (expr.middle.type.equal(BaseType.ERROR) || expr.right.type.equal(BaseType.ERROR)) {
+			return BaseType.ERROR;
+		}
 
 		if (expr.left.type != BaseType.ERROR && expr.left.type != BaseType.BOOL) {
 			issueError(new BadTestExpr(expr.left.getLocation()));

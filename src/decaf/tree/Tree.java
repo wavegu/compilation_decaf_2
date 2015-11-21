@@ -878,16 +878,82 @@ public abstract class Tree {
     }
 
 /*----------------------------------ADDED IN PA1-----------------------*/
+
+    /**
+      * A GuardedStmt.
+      */
+    public static class GuardedStmt extends Tree {
+
+      public Expr boolExpr;
+      public Tree stmt;
+
+      public GuardedStmt(Expr boolExpr, Tree stmt, Location loc) {
+          super(ASSIGN, loc);
+          this.boolExpr = boolExpr;
+          this.stmt = stmt;
+          System.out.println("new GuardedStmt");
+      }
+
+
+      @Override
+      public void accept(Visitor v) {
+        v.visitGuardedStmt(this);
+      }
+
+      @Override
+      public void printTo(IndentPrintWriter pw) {
+        pw.println("guardedstmt");
+        pw.incIndent();
+        boolExpr.printTo(pw);
+        stmt.printTo(pw);
+        pw.decIndent();
+      }
+    }
+
+    /**
+      * A GuardedStmts.
+      */
+    public static class GuardedStmts extends Tree {
+
+      public Tree gstmts;
+      public Expr boolExpr;
+      public Tree stmt;
+
+      public GuardedStmts(Tree gstmts, Expr boolExpr, Tree stmt, Location loc) {
+          super(ASSIGN, loc);
+          this.gstmts = gstmts;
+          this.boolExpr = boolExpr;
+          this.stmt = stmt;
+          System.out.println("new GuardedIfStmts");
+      }
+
+      @Override
+      public void accept(Visitor v) {
+          v.visitGuardedStmts(this);
+      }
+
+      @Override
+      public void printTo(IndentPrintWriter pw) {
+        gstmts.printTo(pw);
+        pw.println("guardedstmt");
+        pw.incIndent();
+        boolExpr.printTo(pw);
+        stmt.printTo(pw);
+        pw.decIndent();
+      }
+    }
+
       /**
       * A GuardedIfStmt.
       */
     public static class GuardedIfStmt extends Tree {
 
-      public Tree stmt;
+      public GuardedStmts stmt;
 
-      public GuardedIfStmt(Tree stmt, Location loc) {
+      public GuardedIfStmt(GuardedStmts stmt, Location loc) {
           super(ASSIGN, loc);
           this.stmt = stmt;
+          System.out.println("new GuardedIfStmt");
       }
 
 
@@ -931,67 +997,7 @@ public abstract class Tree {
         pw.decIndent();
       }
     }
-    /**
-      * A GuardedStmt.
-      */
-    public static class GuardedStmt extends Tree {
 
-      public Expr boolExpr;
-      public Tree stmt;
-
-      public GuardedStmt(Expr boolExpr, Tree stmt, Location loc) {
-          super(ASSIGN, loc);
-          this.boolExpr = boolExpr;
-          this.stmt = stmt;
-      }
-
-
-      @Override
-      public void accept(Visitor v) {
-        v.visitGuardedStmt(this);
-      }
-
-      @Override
-      public void printTo(IndentPrintWriter pw) {
-        pw.println("guardedstmt");
-        pw.incIndent();
-        boolExpr.printTo(pw);
-        stmt.printTo(pw);
-        pw.decIndent();
-      }
-    }
-
-    /**
-      * A GuardedStmts.
-      */
-    public static class GuardedStmts extends Tree {
-
-      public Tree gstmts;
-      public Expr boolExpr;
-      public Tree stmt;
-
-      public GuardedStmts(Tree gstmts, Expr boolExpr, Tree stmt, Location loc) {
-          super(ASSIGN, loc);
-          this.gstmts = gstmts;
-          this.boolExpr = boolExpr;
-          this.stmt = stmt;
-      }
-
-      @Override
-      public void accept(Visitor v) {
-          v.visitGuardedStmts(this);
-      }
-
-      @Override
-      public void printTo(IndentPrintWriter pw) {
-        gstmts.printTo(pw);
-        pw.println("guardedstmt");
-        pw.incIndent();
-        boolExpr.printTo(pw);
-        stmt.printTo(pw);
-        pw.decIndent();
-      }
-    }
 
     /**
       * A numinstances operation.
@@ -1717,5 +1723,6 @@ public abstract class Tree {
         public void visitGuardedDoStmt(GuardedDoStmt that) {
             visitTree(that);
         }
+
     }
 }
