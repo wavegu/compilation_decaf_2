@@ -598,6 +598,11 @@ public class TypeCheck extends Tree.Visitor {
 		}
 	}
 
+	@Override
+	public void visitNuminstances(Tree.Numinstances expr) {
+		expr.type = BaseType.INT;
+	}
+
 	private void issueError(DecafError error) {
 		Driver.getDriver().issueError(error);
 	}
@@ -664,6 +669,7 @@ public class TypeCheck extends Tree.Visitor {
 		}
 		return returnType;
 	}
+
 
 	private Type checkTrinaryOp(Tree.Trinary expr) {
 		expr.left.accept(this);
