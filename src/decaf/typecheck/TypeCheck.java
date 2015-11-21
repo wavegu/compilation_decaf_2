@@ -23,6 +23,7 @@ import decaf.error.FieldNotAccessError;
 import decaf.error.FieldNotFoundError;
 import decaf.error.IncompatBinOpError;
 import decaf.error.IncompatUnOpError;
+import decaf.error.IncompatCondOpError;
 import decaf.error.NotArrayError;
 import decaf.error.NotClassError;
 import decaf.error.NotClassFieldError;
@@ -62,6 +63,13 @@ public class TypeCheck extends Tree.Visitor {
 
 	@Override
 	public void visitBinary(Tree.Binary expr) {
+		expr.left.accept(this);
+		expr.right.accept(this);
+
+		if (expr.left.type.equal(BaseType.ERROR)) {
+			expr.loc = expr.left.getLocation();
+		}
+
 		expr.type = checkBinaryOp(expr.left, expr.right, expr.tag, expr.loc);
 	}
 
@@ -101,13 +109,7 @@ public class TypeCheck extends Tree.Visitor {
 
 	@Override
 	public void visitTrinary(Tree.Trinary expr) {
-		expr.left.accept(this);
-		expr.middle.accept(this);
-		expr.right.accept(this);
-		if (expr.left.type != BaseType.BOOL) {
-			issueError(new BadTestExpr(expr.left.getLocation()));
-		}
-		expr.type = expr.middle.type;
+		expr.type = checkTrinaryOp(expr);
 	}
 
 	@Override
@@ -463,6 +465,10 @@ public class TypeCheck extends Tree.Visitor {
 		assign.left.accept(this);
 		assign.expr.accept(this);
 
+		if (assign.expr.type.equal(BaseType.ERROR)) {
+			return;
+		}
+		
 		if (!assign.left.type.equal(BaseType.ERROR) && (assign.left.type.isFuncType() || !assign.expr.type.compatible(assign.left.type))) {
 			issueError(new IncompatBinOpError(assign.getLocation(), assign.left.type.toString(), "=", assign.expr.type.toString()));
 		}
@@ -597,8 +603,6 @@ public class TypeCheck extends Tree.Visitor {
 	}
 
 	private Type checkBinaryOp(Tree.Expr left, Tree.Expr right, int op, Location location) {
-		left.accept(this);
-		right.accept(this);
 
 		if (left.type.equal(BaseType.ERROR) || right.type.equal(BaseType.ERROR)) {
 			switch (op) {
@@ -659,6 +663,22 @@ public class TypeCheck extends Tree.Visitor {
 					Parser.opStr(op), right.type.toString()));
 		}
 		return returnType;
+	}
+
+	private Type checkTrinaryOp(Tree.Trinary expr) {
+		expr.left.accept(this);
+		expr.middle.accept(this);
+		expr.right.accept(this);
+
+		if (expr.left.type != BaseType.ERROR && expr.left.type != BaseType.BOOL) {
+			issueError(new BadTestExpr(expr.left.getLocation()));
+		}
+		if (expr.middle.type != expr.right.type) {
+			issueError(new IncompatCondOpError(expr.left.getLocation(), expr.middle.type.toString(), expr.right.type.toString()));
+			return BaseType.ERROR;
+		}
+		return expr.middle.type;
+
 	}
 
 	private void checkTestExpr(Tree.Expr expr) {
