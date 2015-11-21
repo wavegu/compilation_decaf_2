@@ -38,7 +38,7 @@ import java.util.*;
 %token FI DO OD
 
 %left GUARD
-%left '?' ':'
+%nonassoc '?' ':'
 %left OR
 %left AND 
 %nonassoc EQUAL NOT_EQUAL
@@ -207,26 +207,32 @@ Stmt            :   VariableDef
 
 GuardedIfStmt   :   IF GuardedStmts FI
                     {
-                        $$.gistmt = new Tree.GuardedIfStmt($2.gstmts, $1.loc);
+                        $$.stmt = new Tree.GuardedIfStmt($2.glist, $1.loc);
                     }
                 ;
 
 
 GuardedDoStmt   :   DO GuardedStmts OD
                     {
-                        $$.stmt = new Tree.GuardedDoStmt($2.stmt, $1.loc);
+                        $$.stmt = new Tree.GuardedDoStmt($2.glist, $1.loc);
                     }
                 ;
 
-GuardedStmts    :   GuardedStmts GUARD Expr ':' Stmt
+GuardedStmts    :   GuardedStmts GUARD GuardedStmt
                     {
-                        $$.gstmts = new Tree.GuardedStmts($1.gstmts, $3.expr, $5.stmt, $2.loc);
+                        $$.glist.add($3.gstmt);
                     }
-                |   Expr ':' Stmt
+                |   GuardedStmt
                     {
-                        $$.gstmts = new Tree.GuardedStmt($1.expr, $3.stmt, $2.loc);
+                        $$.glist = new ArrayList<Tree.GuardedStmt>();
+                        $$.glist.add($1.gstmt);
                     }
                 ;
+
+GuardedStmt     :   Expr ':' Stmt
+                    {
+                        $$.gstmt = new Tree.GuardedStmt($1.expr, $3.stmt, $2.loc);
+                    }
 
 
 SimpleStmt      :   LValue '=' Expr

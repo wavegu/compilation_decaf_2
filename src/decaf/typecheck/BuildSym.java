@@ -233,6 +233,27 @@ public class BuildSym extends Tree.Visitor {
 		}
 	}
 
+	@Override
+	public void visitGuardedStmt(Tree.GuardedStmt expr) {
+		expr.boolExpr.accept(this);
+		expr.stmt.accept(this);
+	}
+
+	@Override
+	public void visitGuardedIfStmt(Tree.GuardedIfStmt gistmt) {
+        for (Tree.GuardedStmt g: gistmt.glist) {
+        	g.accept(this);
+        }
+	}
+
+
+	@Override
+	public void visitGuardedDoStmt(Tree.GuardedDoStmt gdstmt) {
+        for (Tree.GuardedStmt g: gdstmt.glist) {
+        	g.accept(this);
+        }
+	}
+
 	private int calcOrder(Class c) {
 		if (c == null) {
 			return -1;

@@ -24,7 +24,7 @@ import decaf.utils.MiscUtils;
  *
  *  Each subclass is highly standardized.  It generally contains only tree
  *  fields for the syntactic subcomponents of the node.  Some classes that
- *  represent identifier uses or definitions also define a
+ *  represent identifier uses or definitions also define az
  *  Symbol field that denotes the represented identifier.  Classes
  *  for non-local jumps also carry the jump target as a field.  The root
  *  class Tree itself defines fields for the tree's type and
@@ -880,6 +880,67 @@ public abstract class Tree {
 /*----------------------------------ADDED IN PA1-----------------------*/
 
     /**
+      * A GuardedIfStmt.
+      */
+    public static class GuardedIfStmt extends Tree {
+
+      public List<GuardedStmt> glist;
+
+      public GuardedIfStmt(List<GuardedStmt> glist, Location loc) {
+          super(ASSIGN, loc);
+          this.glist = glist;
+      }
+
+
+      @Override
+      public void accept(Visitor v) {
+        v.visitGuardedIfStmt(this);
+      }
+
+      @Override
+      public void printTo(IndentPrintWriter pw) {
+        pw.println("guardedif");
+        pw.incIndent();
+
+        for (GuardedStmt g : glist) {
+          g.printTo(pw);
+        }
+
+        pw.decIndent();
+      }
+    }
+
+    /**
+      * A GuardedDoStmt.
+      */
+    public static class GuardedDoStmt extends Tree {
+
+      public List<GuardedStmt> glist;
+
+      public GuardedDoStmt(List<GuardedStmt> glist, Location loc) {
+          super(ASSIGN, loc);
+          this.glist = glist;
+      }
+
+
+      @Override
+      public void accept(Visitor v) {
+        v.visitGuardedDoStmt(this);
+      }
+
+      @Override
+      public void printTo(IndentPrintWriter pw) {
+        pw.println("guardeddo");
+        pw.incIndent();
+
+        for (GuardedStmt g : glist) {
+          g.printTo(pw);
+        }
+
+        pw.decIndent();
+      }
+    }
+    /**
       * A GuardedStmt.
       */
     public static class GuardedStmt extends Tree {
@@ -891,7 +952,6 @@ public abstract class Tree {
           super(ASSIGN, loc);
           this.boolExpr = boolExpr;
           this.stmt = stmt;
-          System.out.println("new GuardedStmt");
       }
 
 
@@ -909,95 +969,6 @@ public abstract class Tree {
         pw.decIndent();
       }
     }
-
-    /**
-      * A GuardedStmts.
-      */
-    public static class GuardedStmts extends Tree {
-
-      public Tree gstmts;
-      public Expr boolExpr;
-      public Tree stmt;
-
-      public GuardedStmts(Tree gstmts, Expr boolExpr, Tree stmt, Location loc) {
-          super(ASSIGN, loc);
-          this.gstmts = gstmts;
-          this.boolExpr = boolExpr;
-          this.stmt = stmt;
-          System.out.println("new GuardedIfStmts");
-      }
-
-      @Override
-      public void accept(Visitor v) {
-          v.visitGuardedStmts(this);
-      }
-
-      @Override
-      public void printTo(IndentPrintWriter pw) {
-        gstmts.printTo(pw);
-        pw.println("guardedstmt");
-        pw.incIndent();
-        boolExpr.printTo(pw);
-        stmt.printTo(pw);
-        pw.decIndent();
-      }
-    }
-
-      /**
-      * A GuardedIfStmt.
-      */
-    public static class GuardedIfStmt extends Tree {
-
-      public GuardedStmts stmt;
-
-      public GuardedIfStmt(GuardedStmts stmt, Location loc) {
-          super(ASSIGN, loc);
-          this.stmt = stmt;
-          System.out.println("new GuardedIfStmt");
-      }
-
-
-      @Override
-      public void accept(Visitor v) {
-        v.visitGuardedIfStmt(this);
-      }
-
-      @Override
-      public void printTo(IndentPrintWriter pw) {
-        pw.println("guardedif");
-        pw.incIndent();
-        stmt.printTo(pw);
-        pw.decIndent();
-      }
-    }
-
-    /**
-      * A GuardedDoStmt.
-      */
-    public static class GuardedDoStmt extends Tree {
-
-      public Tree stmt;
-
-      public GuardedDoStmt(Tree stmt, Location loc) {
-          super(ASSIGN, loc);
-          this.stmt = stmt;
-      }
-
-
-      @Override
-      public void accept(Visitor v) {
-        v.visitGuardedDoStmt(this);
-      }
-
-      @Override
-      public void printTo(IndentPrintWriter pw) {
-        pw.println("guardeddo");
-        pw.incIndent();
-        stmt.printTo(pw);
-        pw.decIndent();
-      }
-    }
-
 
     /**
       * A numinstances operation.
@@ -1709,10 +1680,6 @@ public abstract class Tree {
         }
 
         public void visitGuardedStmt(GuardedStmt that) {
-            visitTree(that);
-        }
-
-        public void visitGuardedStmts(GuardedStmts that) {
             visitTree(that);
         }
 

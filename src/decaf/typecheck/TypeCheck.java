@@ -610,19 +610,23 @@ public class TypeCheck extends Tree.Visitor {
 
 	@Override
 	public void visitGuardedStmt(Tree.GuardedStmt expr) {
-        System.out.println("visiting GuardedStmt");
 		expr.boolExpr.accept(this);
+		expr.stmt.accept(this);
 	}
 
 	@Override
-	public void visitGuardedStmts(Tree.GuardedStmts expr) {
-        System.out.println("visiting GuardedStmts");
+	public void visitGuardedIfStmt(Tree.GuardedIfStmt gistmt) {
+        for (Tree.GuardedStmt g: gistmt.glist) {
+        	g.accept(this);
+        }
 	}
 
 	@Override
-	public void visitGuardedIfStmt(Tree.GuardedIfStmt expr) {
-        System.out.println("visiting GuardedIfStmt");
-        expr.stmt.accept(this);
+	public void visitGuardedDoStmt(Tree.GuardedDoStmt gdstmt) {
+		breaks.add(gdstmt);
+        for (Tree.GuardedStmt g: gdstmt.glist) {
+        	g.accept(this);
+        }
 	}
 
 

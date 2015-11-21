@@ -12,7 +12,6 @@ import decaf.tree.Tree.TopLevel;
 import decaf.tree.Tree.VarDef;
 import decaf.tree.Tree.TypeLiteral;
 import decaf.tree.Tree.GuardedStmt;
-import decaf.tree.Tree.GuardedStmts;
 import decaf.tree.Tree.GuardedIfStmt;
 import decaf.utils.MiscUtils;
 
@@ -61,11 +60,9 @@ public class SemValue {
 
 	public LValue lvalue;
 
-	public GuardedIfStmt gistmt;
+	public Tree.GuardedStmt gstmt;
 
-	public GuardedStmt gstmt;
-
-	public GuardedStmts gstmts;
+	public List<Tree.GuardedStmt> glist;
 
 	/**
 	 * 创建一个关键字的语义值
