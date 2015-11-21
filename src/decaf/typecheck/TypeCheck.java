@@ -104,6 +104,9 @@ public class TypeCheck extends Tree.Visitor {
 		expr.left.accept(this);
 		expr.middle.accept(this);
 		expr.right.accept(this);
+		if (expr.left.type != BaseType.BOOL) {
+			issueError(new BadTestExpr(expr.left.getLocation()));
+		}
 		expr.type = expr.middle.type;
 	}
 
@@ -459,12 +462,9 @@ public class TypeCheck extends Tree.Visitor {
 	public void visitAssign(Tree.Assign assign) {
 		assign.left.accept(this);
 		assign.expr.accept(this);
-		if (!assign.left.type.equal(BaseType.ERROR)
-				&& (assign.left.type.isFuncType() || !assign.expr.type
-						.compatible(assign.left.type))) {
-			issueError(new IncompatBinOpError(assign.getLocation(),
-					assign.left.type.toString(), "=", assign.expr.type
-							.toString()));
+
+		if (!assign.left.type.equal(BaseType.ERROR) && (assign.left.type.isFuncType() || !assign.expr.type.compatible(assign.left.type))) {
+			issueError(new IncompatBinOpError(assign.getLocation(), assign.left.type.toString(), "=", assign.expr.type.toString()));
 		}
 	}
 
